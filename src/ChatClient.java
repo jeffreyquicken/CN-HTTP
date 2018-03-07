@@ -20,13 +20,11 @@ public class ChatClient {
         Socket socket = new Socket(address, 80);
         boolean autoflush = true;
         PrintWriter out = new PrintWriter(socket.getOutputStream(), autoflush);
-        BufferedReader in = new BufferedReader(
-
-                new InputStreamReader(socket.getInputStream()));
+        BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 
         // send an HTTP request to the web server
         out.println(args[0] + " / HTTP/1.1");
-        out.println("Host: "+ args[1] + ":80");
+        out.println("Host: "+ args[1]);
         out.println("Connection: Close");
         out.println();
 
@@ -48,6 +46,10 @@ public class ChatClient {
         // prints the response to the terminal
         System.out.println(sb.toString());
 
+
+
+        socket.close();
+
         // saves the response to an html file
         File file = new File("/Users/jeffreyquicken/Downloads/response.html");
         BufferedWriter writer = null;
@@ -57,13 +59,15 @@ public class ChatClient {
         } finally {
             if (writer != null) writer.close();
         }
-        socket.close();
 
-        Document doc = Jsoup.parse(file, "UTF-8", "");
-        //Elements image = doc.getElementsByTag("img");
-        //for (Element el : image) {
-          //  System.out.println(el.attr("src"));
-            //}
+//        Document doc = Jsoup.parse(file, "UTF-8", "");
+//        Elements image = doc.getElementsByTag("img");
+//        System.out.println("Afbeeldingen:");
+//        for (Element el : image) {
+//            System.out.println(el.attr("src"));
+//            }
+
+
     }
 
 
