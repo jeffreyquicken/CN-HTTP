@@ -1,14 +1,18 @@
 
 
-import java.io.*;
-import java.net.InetAddress;
-import java.net.Socket;
-
 import org.jsoup.Jsoup;
 import org.jsoup.helper.Validate;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+
+import java.io.*;
+import java.net.InetAddress;
+import java.net.Socket;
+
+
+
+
 
 public class ChatClient {
     public static void main(String[] args) throws Exception {
@@ -55,7 +59,7 @@ public class ChatClient {
         }
         socket.close();
 
-       // Document doc = Jsoup.parse(file, "UTF-8", "");
+        Document doc = Jsoup.parse(file, "UTF-8", "");
         //Elements image = doc.getElementsByTag("img");
         //for (Element el : image) {
           //  System.out.println(el.attr("src"));
