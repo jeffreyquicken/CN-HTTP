@@ -1,6 +1,14 @@
+
+
 import java.io.*;
 import java.net.InetAddress;
 import java.net.Socket;
+
+import org.jsoup.Jsoup;
+import org.jsoup.helper.Validate;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 
 public class ChatClient {
     public static void main(String[] args) throws Exception {
@@ -24,14 +32,19 @@ public class ChatClient {
         while (loop) {
             if (in.ready()) {
                 int i = 0;
-                while (i != -1) { //end of InputStream when next read int is -1
+                //end of InputStream when next read int is -1
+                while (i != -1) {
                     i = in.read();
                     sb.append((char) i);
                 }
                 loop = false;
             }
         }
+
+        // prints the response to the terminal
         System.out.println(sb.toString());
+
+        // saves the response to an html file
         File file = new File("/Users/jeffreyquicken/Downloads/response.html");
         BufferedWriter writer = null;
         try {
@@ -41,5 +54,13 @@ public class ChatClient {
             if (writer != null) writer.close();
         }
         socket.close();
+
+       // Document doc = Jsoup.parse(file, "UTF-8", "");
+        //Elements image = doc.getElementsByTag("img");
+        //for (Element el : image) {
+          //  System.out.println(el.attr("src"));
+            //}
     }
+
+
 }
