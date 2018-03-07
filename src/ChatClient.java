@@ -6,15 +6,15 @@ import java.net.Socket;
 
 public class ChatClient {
     public static void main(String[] args) throws Exception {
-        InetAddress addr = InetAddress.getByName("www.google.com");
-        Socket socket = new Socket(addr, 80);
+        InetAddress address = InetAddress.getByName(args[1]);
+        Socket socket = new Socket(address, 80);
         boolean autoflush = true;
         PrintWriter out = new PrintWriter(socket.getOutputStream(), autoflush);
         BufferedReader in = new BufferedReader(
 
                 new InputStreamReader(socket.getInputStream()));
         // send an HTTP request to the web server
-        out.println("GET / HTTP/1.1");
+        out.println(args[0] + " / HTTP/1.1");
         out.println("Host: www.google.com:80");
         out.println("Connection: Close");
         out.println();
