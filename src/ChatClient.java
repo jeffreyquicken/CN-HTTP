@@ -13,7 +13,15 @@ import java.net.Socket;
 
 
 
-
+/**
+ * The ChatClient program implements the client side of an HTTP client-server model.
+ * It can send requests to a server and receive a response.
+ * The response is stored in an HTML file and is processed to retreive embedded objects from the server.
+ *
+ * @author  Jeffrey Quicken
+ * @version 1.0
+ * @since   2018-03-07
+ */
 public class ChatClient {
     public static void main(String[] args) throws Exception {
         InetAddress address = InetAddress.getByName(args[1]);
@@ -60,14 +68,13 @@ public class ChatClient {
             if (writer != null) writer.close();
         }
 
-//        Document doc = Jsoup.parse(file, "UTF-8", "");
-//        Elements image = doc.getElementsByTag("img");
-//        System.out.println("Afbeeldingen:");
-//        for (Element el : image) {
-//            System.out.println(el.attr("src"));
-//            }
-
-
+        // Parses the HTML file and extracts the links for each image found on the page
+        Document doc = Jsoup.parse(file, "UTF-8", "");
+        Elements imgs = doc.select("img[src]");
+        for (Element img : imgs) {
+            System.out.println("\nimg : " + img.attr("href"));
+            System.out.println("text : " + img.text());
+        }
     }
 
 
