@@ -7,29 +7,17 @@ import java.io.*;
 import java.net.InetAddress;
 import java.net.Socket;
 
-/**
- * The client does a given HTTP request to a given server, returns the response to the terminal and saves it to an HTML file.
- * When needed it analyses the response an requests the embedded HTML objects and stores them locally.
- *
- * @author  Jeffrey Quicken
- * @version 1.0
- * @since   2018-03-07
- */
-public class Client {
+public class test {
 
-    // Path where response is stored
-    public static String RESPONSE_PATH = "/Users/jeffreyquicken/Downloads/response.html";
-
-    // Opens a client socket and connects to the given server at the given port, outputs the response and saves it to disk
-    public static void request(String command, String url, String path,  int port) throws Exception{
+    public static void request(String command, String url, int port) throws Exception{
         InetAddress address = InetAddress.getByName(url);
         Socket socket = new Socket(address, port);
         boolean autoflush = true;
         PrintWriter out = new PrintWriter(socket.getOutputStream(), autoflush);
         BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 
-        // send an HTTP request to the server
-        out.println(command + " " + path + " HTTP/1.1");
+        // send an HTTP request to the web server
+        out.println(command + " / HTTP/1.1");
         out.println("Host: " + url);
         out.println("Connection: Close");
         out.println();
@@ -55,7 +43,7 @@ public class Client {
         socket.close();
 
         // saves the response to an html file
-        File file = new File(RESPONSE_PATH);
+        File file = new File("/Users/jeffreyquicken/Downloads/response.html");
         BufferedWriter writer = null;
         try {
             writer = new BufferedWriter(new FileWriter(file));
@@ -72,10 +60,9 @@ public class Client {
 
         switch (command) {
             case "GET":
-                request(command, url,"/", port);
-
+                request(command, url, port);
                 // Parses the HTML file and extracts the links for each image found on the page
-                File input = new File(RESPONSE_PATH);
+                File input = new File("/Users/jeffreyquicken/Downloads/test.html");
                 Document doc = Jsoup.parse(input, "UTF-8", "");
                 Elements imgs = doc.getElementsByTag("img");
                 for (Element img : imgs) {
@@ -83,13 +70,11 @@ public class Client {
                 }
                 break;
             case "HEAD":
-                request(command, url,"/", port);
+                request(command, url, port);
                 break;
             case "POST":
-                request(command, url,"/", port);
                 break;
             case "PUT":
-                request(command, url,"/", port);
                 break;
         }
     }
