@@ -6,6 +6,7 @@ import org.jsoup.select.Elements;
 import java.io.*;
 import java.net.InetAddress;
 import java.net.Socket;
+import java.util.Scanner;
 
 /**
  * The client does a given HTTP request to a given server, returns the response to the terminal and saves it to an HTML file.
@@ -69,6 +70,7 @@ public class Client {
         String command = args[0];
         String url = args[1];
         int port = Integer.parseInt(args[2]);
+        Scanner scanner = new Scanner(System.in);
 
         switch (command) {
             case "GET":
@@ -79,6 +81,7 @@ public class Client {
                 Document doc = Jsoup.parse(input, "UTF-8", "");
                 Elements imgs = doc.getElementsByTag("img");
                 for (Element img : imgs) {
+                    //TODO Retreive found images with request and save to disk
                     System.out.println("image tag: " + img.attr("src"));
                 }
                 break;
@@ -86,6 +89,9 @@ public class Client {
                 request(command, url,"/", port);
                 break;
             case "POST":
+                //TODO read line from terminal and send forward
+                System.out.print("Enter your message: ");
+                String message = scanner.next();
                 request(command, url,"/", port);
                 break;
             case "PUT":
