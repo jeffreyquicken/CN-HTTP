@@ -1,7 +1,6 @@
 
 
 import org.jsoup.Jsoup;
-import org.jsoup.helper.Validate;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
@@ -11,10 +10,8 @@ import java.net.InetAddress;
 import java.net.Socket;
 
 
-
-
 /**
- * The ChatClient program implements the client side of an HTTP client-server model.
+ * The Client program implements the client side of an HTTP client-server model.
  * It can send requests to a server and receive a response.
  * The response is stored in an HTML file and is processed to retreive embedded objects from the server.
  *
@@ -22,17 +19,18 @@ import java.net.Socket;
  * @version 1.0
  * @since   2018-03-07
  */
-public class ChatClient {
-    public static void main(String[] args) throws Exception {
-        InetAddress address = InetAddress.getByName(args[1]);
-        Socket socket = new Socket(address, 80);
+public class Client {
+
+    private static void request(String command, String url, int port) throws Exception{
+        InetAddress address = InetAddress.getByName(url);
+        Socket socket = new Socket(address, port);
         boolean autoflush = true;
         PrintWriter out = new PrintWriter(socket.getOutputStream(), autoflush);
         BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 
         // send an HTTP request to the web server
-        out.println(args[0] + " / HTTP/1.1");
-        out.println("Host: "+ args[1]);
+        out.println(command + " / HTTP/1.1");
+        out.println("Host: "+ url);
         out.println("Connection: Close");
         out.println();
 
@@ -68,13 +66,32 @@ public class ChatClient {
             if (writer != null) writer.close();
         }
 
-        // Parses the HTML file and extracts the links for each image found on the page
-        Document doc = Jsoup.parse(file, "UTF-8", "");
-        Elements imgs = doc.select("img[src]");
-        for (Element img : imgs) {
-            System.out.println("\nimg : " + img.attr("abs:src"));
-            System.out.println("text : " + img.text());
+
+    }
+    public static void main(String[] args) throws Exception {
+        String command = args[0];
+        String url = args[1];
+        int port = Integer.parseInt(args[2]);
+
+        switch (command){
+            case "HEAD":
+                request(command, url, port);
+            case "GET":
+                request(command, url, port);
+            case "PUT":
+                request(command, url, port);
+            case "POST":
+                request(command, url, port);
+
         }
+
+//        // Parses the HTML file and extracts the links for each image found on the page
+//        Document doc = Jsoup.parse(file, "UTF-8", "");
+//        Elements imgs = doc.select("img[src]");
+//        for (Element img : imgs) {
+//            System.out.println("\nimg : " + img.attr("abs:src"));
+//            System.out.println("text : " + img.text());
+//        }
     }
 
 
