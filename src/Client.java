@@ -29,11 +29,20 @@ public class Client {
         PrintWriter out = new PrintWriter(socket.getOutputStream(), autoflush);
         BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 
-        // send an HTTP request to the server
-        out.println(command + " " + path + " HTTP/1.1");
-        out.println("Host: " + url);
-        out.println("Connection: Close");
-        out.println();
+        if (command.equals("GET")) {
+            // send an HTTP request to the server
+            out.println(command + " " + path + " HTTP/1.1");
+            out.println("Host: " + url);
+            out.println("Connection: Close");
+            out.println();
+        }else if (command.equals("POST")){
+            // send an HTTP request to the server
+            out.println(command + " " + path + " HTTP/1.1");
+            out.println("Host: " + url);
+            out.println("Content-Type: plain/text");
+            out.println("Connection: Close");
+            out.println();
+        }
 
         // read the response
         boolean loop = true;
@@ -89,13 +98,22 @@ public class Client {
                 request(command, url,"/", port);
                 break;
             case "POST":
-                //TODO read line from terminal and send forward
+            case "PUT":
+                // Create temporary txt file where the message will be stored
+                File temp;
+                temp = File.createTempFile("msg", ".txt");
+                BufferedWriter bw = new BufferedWriter(new FileWriter(temp));
+
+                // Read user input via terminal
                 System.out.print("Enter your message: ");
                 String message = scanner.next();
-                request(command, url,"/", port);
-                break;
-            case "PUT":
-                request(command, url,"/", port);
+
+                // Write message to the temporary file
+                bw.write(message);
+                bw.close();
+
+                // makes request to server
+                request(command, url,temp.getAbsolutePath(), port);
                 break;
         }
     }
