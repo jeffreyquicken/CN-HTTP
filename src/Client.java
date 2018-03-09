@@ -75,8 +75,9 @@ public class Client {
             if (writer != null) writer.close();
         }
 
+        //TODO save image to disk
         if (save == true){
-            
+
 
         }
     }
