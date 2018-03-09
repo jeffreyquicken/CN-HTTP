@@ -22,24 +22,25 @@ public class Client {
     public static String RESPONSE_PATH = "/Users/jeffreyquicken/Downloads/response.html";
 
     // Opens a client socket and connects to the given server at the given port, outputs the response and saves it to disk
-    public static void request(String command, String url, String path,  int port) throws Exception{
+    public static void request(String command, String url, String path,  int port, String message, Boolean save) throws Exception{
         InetAddress address = InetAddress.getByName(url);
         Socket socket = new Socket(address, port);
         boolean autoflush = true;
         PrintWriter out = new PrintWriter(socket.getOutputStream(), autoflush);
         BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 
-        if (command.equals("GET")) {
+        if (command.equals("GET") || command.equals("HEAD")) {
             // send an HTTP request to the server
             out.println(command + " " + path + " HTTP/1.1");
             out.println("Host: " + url);
             out.println("Connection: Close");
             out.println();
-        }else if (command.equals("POST")){
+        }else if (command.equals("POST") || command.equals("PUT")){
             // send an HTTP request to the server
             out.println(command + " " + path + " HTTP/1.1");
             out.println("Host: " + url);
             out.println("Content-Type: plain/text");
+            out.println(message);
             out.println("Connection: Close");
             out.println();
         }
@@ -73,6 +74,11 @@ public class Client {
         } finally {
             if (writer != null) writer.close();
         }
+
+        if (save == true){
+            
+
+        }
     }
 
     public static void main(String[] args) throws Exception {
@@ -83,7 +89,7 @@ public class Client {
 
         switch (command) {
             case "GET":
-                request(command, url,"/", port);
+                request(command, url,"/", port,"",false);
 
                 // Parses the HTML file and extracts the links for each image found on the page
                 File input = new File(RESPONSE_PATH);
@@ -92,28 +98,20 @@ public class Client {
                 for (Element img : imgs) {
                     //TODO Retreive found images with request and save to disk
                     System.out.println("image tag: " + img.attr("src"));
+                    request("GET", url, "/" + img.attr("src"), port, "", true);
                 }
                 break;
             case "HEAD":
-                request(command, url,"/", port);
+                request(command, url,"/", port,"", false);
                 break;
             case "POST":
             case "PUT":
-                // Create temporary txt file where the message will be stored
-                File temp;
-                temp = File.createTempFile("msg", ".txt");
-                BufferedWriter bw = new BufferedWriter(new FileWriter(temp));
-
                 // Read user input via terminal
                 System.out.print("Enter your message: ");
                 String message = scanner.next();
 
-                // Write message to the temporary file
-                bw.write(message);
-                bw.close();
-
-                // makes request to server
-                request(command, url,temp.getAbsolutePath(), port);
+                // Send request with message
+                request(command, url,"/", port, message, false);
                 break;
         }
     }
