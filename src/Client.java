@@ -7,6 +7,7 @@ import java.io.*;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.util.Scanner;
+import java.net.URL;
 
 /**
  * The client does a given HTTP request to a given server, returns the response to the terminal and saves it to an HTML file.
@@ -23,6 +24,7 @@ public class Client {
 
     // Opens a client socket and connects to the given server at the given port, outputs the response and saves it to disk
     public static void request(String command, String url, String path,  int port, String message, Boolean save) throws Exception{
+
         InetAddress address = InetAddress.getByName(url);
         Socket socket = new Socket(address, port);
         boolean autoflush = true;
@@ -84,23 +86,28 @@ public class Client {
 
     public static void main(String[] args) throws Exception {
         String command = args[0];
-        String url = args[1];
+        // Parses the url and extracts the host and the path
+        URL full = new URL(args[1]);
+        String url = full.getHost();
+        String path = full.getPath();
+        // If homepage is given the path will be empty and the request will be bad unless the path is "/".
+        if(path == null || path.isEmpty()) { path = "/";}
         int port = Integer.parseInt(args[2]);
         Scanner scanner = new Scanner(System.in);
 
         switch (command) {
             case "GET":
-                request(command, url,"/", port,"",false);
+                request(command, url,path, port,"",false);
 
-                // Parses the HTML file and extracts the links for each image found on the page
-                File input = new File(RESPONSE_PATH);
-                Document doc = Jsoup.parse(input, "UTF-8", "");
-                Elements imgs = doc.getElementsByTag("img");
-                for (Element img : imgs) {
-                    //TODO Retreive found images with request and save to disk
-                    System.out.println("image tag: " + img.attr("src"));
-                    request("GET", url, "/" + img.attr("src"), port, "", true);
-                }
+//                // Parses the HTML file and extracts the links for each image found on the page
+//                File input = new File(RESPONSE_PATH);
+//                Document doc = Jsoup.parse(input, "UTF-8", "");
+//                Elements imgs = doc.getElementsByTag("img");
+//                for (Element img : imgs) {
+//                    //TODO Retreive found images with request and save to disk
+//                    System.out.println("image tag: " + img.attr("src"));
+//                    request("GET", url, "/" + img.attr("src"), port, "", true);
+//                }
                 break;
             case "HEAD":
                 request(command, url,"/", port,"", false);
