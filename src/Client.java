@@ -10,11 +10,10 @@ import java.util.Scanner;
 import java.net.URL;
 
 /**
- * The client does a given HTTP request to a given server, returns the response to the terminal and saves it to an HTML file.
+ * The client sends a given HTTP request to a given server, returns the response to the terminal and saves it to an HTML file.
  * When needed it analyses the response an requests the embedded HTML objects and stores them locally.
  *
  * @author  Jeffrey Quicken
- * @version 1.0
  * @since   2018-03-07
  */
 public class Client {
@@ -27,8 +26,7 @@ public class Client {
 
         InetAddress address = InetAddress.getByName(url);
         Socket socket = new Socket(address, port);
-        boolean autoflush = true;
-        PrintWriter out = new PrintWriter(socket.getOutputStream(), autoflush);
+        PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
         BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 
         if (command.equals("GET") || command.equals("HEAD")) {
