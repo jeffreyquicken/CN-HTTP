@@ -99,15 +99,15 @@ public class Client {
             case "GET":
                 request(command, url,path, port,"",false);
 
-//                // Parses the HTML file and extracts the links for each image found on the page
-//                File input = new File(RESPONSE_PATH);
-//                Document doc = Jsoup.parse(input, "UTF-8", "");
-//                Elements imgs = doc.getElementsByTag("img");
-//                for (Element img : imgs) {
-//                    //TODO Retreive found images with request and save to disk
-//                    System.out.println("image tag: " + img.attr("src"));
-//                    request("GET", url, "/" + img.attr("src"), port, "", true);
-//                }
+                // Parses the HTML file and extracts the links for each image found on the page
+                File input = new File(RESPONSE_PATH);
+                Document doc = Jsoup.parse(input, "UTF-8", "");
+                Elements imgs = doc.getElementsByTag("img");
+                for (Element img : imgs) {
+                    //TODO Retreive found images with request and save to disk
+                    System.out.println("image tag: " + img.attr("src"));
+                    request("GET", url, "/" + img.attr("src"), port, "", true);
+                }
                 break;
             case "HEAD":
                 request(command, url,"/", port,"", false);
