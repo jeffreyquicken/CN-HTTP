@@ -8,7 +8,7 @@ import java.net.InetAddress;
 import java.net.Socket;
 import java.util.Scanner;
 import java.net.URL;
-
+//TODO savepath; single connection; saving images
 /**
  * The client sends a given HTTP request to a given server, returns the response to the terminal and saves it to an HTML file.
  * When needed it analyses the response an requests the embedded HTML objects and stores them locally.
