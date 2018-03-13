@@ -20,10 +20,7 @@ public class test {
 
 
     public static void main(String[] args) throws Exception {
-        System.out.println(args[0]);
-        URL url = new URL(args[0]);
-        //System.out.println(url.getHost());
-        System.out.println(url.getPath());
+
     }
 }
 

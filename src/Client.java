@@ -19,7 +19,7 @@ import java.net.URL;
 public class Client {
 
     // Path where response is stored
-    public static String RESPONSE_PATH = "/Users/jeffreyquicken/Downloads/response.html";
+    public static String RESPONSE_PATH = "./response.html";
 
     // Opens a client socket and connects to the given server at the given port, outputs the response and saves it to disk
     public static void request(String command, String url, String path,  int port, String message, Boolean save) throws Exception{
@@ -108,7 +108,7 @@ public class Client {
                 }
                 break;
             case "HEAD":
-                request(command, url,"/", port,"", false);
+                request(command, url,path, port,"", false);
                 break;
             case "POST":
             case "PUT":
@@ -117,7 +117,7 @@ public class Client {
                 String message = scanner.next();
 
                 // Send request with message
-                request(command, url,"/", port, message, false);
+                request(command, url,path, port, message, false);
                 break;
         }
     }
