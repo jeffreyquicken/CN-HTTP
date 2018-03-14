@@ -34,7 +34,7 @@ public class Client {
             // send an HTTP request to the server
             out.println(command + " " + path + " HTTP/1.1");
             out.println("Host: " + url);
-            out.println("Connection: Close");
+            out.println("Connection: Keep-Alive");
             out.println("");
         }else if (command.equals("POST") || command.equals("PUT")){
             // send an HTTP request to the server
@@ -89,7 +89,7 @@ public class Client {
                 // send an HTTP request to the server
                 out.println(command + " " + path + " HTTP/1.1");
                 out.println("Host: " + url);
-                out.println("Connection: Close");
+                out.println("Connection: Keep-Alive");
                 out.println();
 
                 OutputStream dos = new FileOutputStream("."+ path);
@@ -135,7 +135,7 @@ public class Client {
 
         switch (command) {
             case "GET":
-                request(command, url,path, port,"",false);
+                request(command, url,path, port,"",true);
                 break;
             case "HEAD":
                 request(command, url,path, port,"", false);
