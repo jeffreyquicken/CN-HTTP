@@ -28,13 +28,14 @@ public class Client {
         Socket socket = new Socket(address, port);
         PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
         BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+        DataInputStream imageIn = new DataInputStream(socket.getInputStream());
 
         if (command.equals("GET") || command.equals("HEAD")) {
             // send an HTTP request to the server
             out.println(command + " " + path + " HTTP/1.1");
             out.println("Host: " + url);
             out.println("Connection: Close");
-            out.println();
+            out.println("");
         }else if (command.equals("POST") || command.equals("PUT")){
             // send an HTTP request to the server
             out.println(command + " " + path + " HTTP/1.1");
@@ -63,7 +64,7 @@ public class Client {
         // prints the response to the terminal
         System.out.println(sb.toString());
 
-        socket.close();
+
 
         // saves the response to an html file
         File file = new File(RESPONSE_PATH);
@@ -75,12 +76,50 @@ public class Client {
             if (writer != null) writer.close();
         }
 
-        //TODO save image to disk
-        if (save == true){
 
+        //TODO save image to disk
+        if (save){
+            // Parses the HTML file and extracts the links for each image found on the page
+            File input = new File(RESPONSE_PATH);
+            Document doc = Jsoup.parse(input, "UTF-8", "");
+            Elements imgs = doc.getElementsByTag("img");
+            for (Element img : imgs) {
+                //TODO Retreive found images with request and save to disk
+                path = "/" + img.attr("src");
+                // send an HTTP request to the server
+                out.println(command + " " + path + " HTTP/1.1");
+                out.println("Host: " + url);
+                out.println("Connection: Close");
+                out.println();
+
+                OutputStream dos = new FileOutputStream("."+ path);
+                int count;
+                byte[] buffer = new byte[2048];
+                boolean eohFound = false;
+                while ((count = imageIn.read(buffer)) != -1)
+                {
+                    if(!eohFound){
+                        String string = new String(buffer, 0, count);
+                        int indexOfEOH = string.indexOf("\r\n\r\n");
+                        if(indexOfEOH != -1) {
+                            count = count-indexOfEOH-4;
+                            buffer = string.substring(indexOfEOH+4).getBytes();
+                            eohFound = true;
+                        } else {
+                            count = 0;
+                        }
+                    }
+                    dos.write(buffer, 0, count);
+                    dos.flush();
+                }
+                in.close();
+                dos.close();
+            }
 
         }
+        socket.close();
     }
+
 
     public static void main(String[] args) throws Exception {
         String command = args[0];
@@ -88,6 +127,7 @@ public class Client {
         URL full = new URL(args[1]);
         String url = full.getHost();
         String path = full.getPath();
+
         // If homepage is given the path will be empty and the request will be bad unless the path is "/".
         if(path == null || path.isEmpty()) { path = "/";}
         int port = Integer.parseInt(args[2]);
@@ -96,16 +136,6 @@ public class Client {
         switch (command) {
             case "GET":
                 request(command, url,path, port,"",false);
-
-                // Parses the HTML file and extracts the links for each image found on the page
-                File input = new File(RESPONSE_PATH);
-                Document doc = Jsoup.parse(input, "UTF-8", "");
-                Elements imgs = doc.getElementsByTag("img");
-                for (Element img : imgs) {
-                    //TODO Retreive found images with request and save to disk
-                    System.out.println("image tag: " + img.attr("src"));
-                    request("GET", url, "/" + img.attr("src"), port, "", true);
-                }
                 break;
             case "HEAD":
                 request(command, url,path, port,"", false);
