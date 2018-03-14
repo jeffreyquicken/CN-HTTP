@@ -1,7 +1,11 @@
 import java.net.*;
 import java.io.*;
+import java.util.Date;
+
 
 public class Server extends Thread {
+    public static String AVAILABLE_FILE = "/webpage.html";
+
     public void run(){
         try {
             ServerSocket serverSocket = new ServerSocket(8080);
@@ -14,19 +18,32 @@ public class Server extends Thread {
                 String line = null;
 
                 //handle request
+
                 if((line = reader.readLine()) != null){
                     //read request line
-                    if(line.contains("GET")){
-                        answer = "bla";
+                    String [] parsed = line.split("[/]");
+                    String command = parsed[0];
+                    String path = parsed[1];
+
+                    if(!path.equals(AVAILABLE_FILE)){
+                        writer.println("HTTP/1.1 404 Not Found");
                     }
-                    else if (line.contains("HEAD"){
-                        answer = "kdjkd";
-                    }
-                    else if (line.contains("PUT"){
-                        answer = "kdjkd";
-                    }
-                    else if (line.contains("POST"){
-                        answer = "kdjkd";
+
+                    switch (command) {
+                        case "GET":
+                            writer.println("HTTP/1.1 200 OK");
+                            Date date = new Date();
+                            writer.println(date);
+                            break;
+                        case "HEAD":
+                            break;
+                        case "POST":
+                            break;
+                        case "PUT":
+                            break;
+                        default:
+                            writer.println("HTTP/1.1 400 Bad Request");
+                            break;
                     }
                 }
                 //send answer back
