@@ -84,7 +84,6 @@ public class Client {
             Document doc = Jsoup.parse(input, "UTF-8", "");
             Elements imgs = doc.getElementsByTag("img");
             for (Element img : imgs) {
-                //TODO Retreive found images with request and save to disk
                 path = "/" + img.attr("src");
                 // send an HTTP request to the server
                 out.println(command + " " + path + " HTTP/1.1");
@@ -135,7 +134,7 @@ public class Client {
 
         switch (command) {
             case "GET":
-                request(command, url,path, port,"",true);
+                request(command, url,path, port,"",false);
                 break;
             case "HEAD":
                 request(command, url,path, port,"", false);
