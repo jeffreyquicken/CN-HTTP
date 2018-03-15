@@ -146,7 +146,7 @@ public class Client {
                 String message = scanner.next();
 
                 // Send request with message
-                request(command, url,path, port, message, false);
+                request(command, url,path, 8080, message, false);
                 break;
         }
     }
