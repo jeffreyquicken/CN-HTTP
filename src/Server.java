@@ -50,11 +50,13 @@ public class Server extends Thread {
                             writer.println("Content-Type: text/html");
                             break;
                         case "POST":
+                            //TODO parse http request and extract body, append to existing file or create new file
                             writer.println("HTTP/1.1 200 OK");
                             date = new Date();
                             writer.println(date);
                             break;
                         case "PUT":
+                            //TODO parse http request and extract body, save to new file
                             writer.println("HTTP/1.1 200 OK");
                             date = new Date();
                             writer.println(date);

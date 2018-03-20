@@ -41,9 +41,10 @@ public class Client {
             out.println(command + " " + path + " HTTP/1.1");
             out.println("Host: " + url);
             out.println("Content-Type: plain/text");
+            out.println("");
             out.println(message);
             out.println("Connection: Close");
-            out.println();
+            out.println("");
         }
 
         // read the response
