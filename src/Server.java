@@ -4,7 +4,7 @@ import java.util.Date;
 
 
 public class Server extends Thread {
-    public static String AVAILABLE_FILE = "/webpage.html";
+    public static String AVAILABLE_FILE = "./webpage.html";
 
     public void run(){
         try {
@@ -28,33 +28,48 @@ public class Server extends Thread {
                     if(!path.equals(AVAILABLE_FILE)){
                         writer.println("HTTP/1.1 404 Not Found");
                     }
-
+                    Date date = new Date();
                     switch (command) {
                         case "GET":
                             writer.println("HTTP/1.1 200 OK");
-                            Date date = new Date();
+                            date = new Date();
                             writer.println(date);
+                            writer.println("Content-Type: text/html");
+                            File file = new File("./webpage.html");
+                            long length = file.length();
+                            writer.println("Content-length: " + length);
+                            //TODO send body to client
                             break;
                         case "HEAD":
+                            writer.println("HTTP/1.1 200 OK");
+                            date = new Date();
+                            writer.println(date);
+                            File hFile = new File("./webpage.html");
+                            long hLength = hFile.length();
+                            writer.println("Content-length: " + hLength);
+                            writer.println("Content-Type: text/html");
                             break;
                         case "POST":
+                            writer.println("HTTP/1.1 200 OK");
+                            date = new Date();
+                            writer.println(date);
                             break;
                         case "PUT":
+                            writer.println("HTTP/1.1 200 OK");
+                            date = new Date();
+                            writer.println(date);
                             break;
                         default:
                             writer.println("HTTP/1.1 400 Bad Request");
                             break;
                     }
                 }
-                //send answer back
-                writer.print(answer + "\n");
-                writer.flush();
                 reader.close();
                 writer.close();
                 socket.close();
             }
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (Exception e) {
+            //TODO send 500 Server Error
         }
     }
 
