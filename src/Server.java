@@ -2,7 +2,12 @@ import java.net.*;
 import java.io.*;
 import java.util.Date;
 
-
+/**
+ * The server responds to the given request from the client. It sends the appropriate error response codes when needed.
+ *
+ * @author  Jeffrey Quicken
+ * @since   2018-03-07
+ */
 public class Server extends Thread {
     public static String AVAILABLE_FILE = "./webpage.html";
 
@@ -10,11 +15,11 @@ public class Server extends Thread {
         try {
             ServerSocket serverSocket = new ServerSocket(8080);
             while(true){
+
                 Socket socket = serverSocket.accept();
 
                 BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
                 PrintWriter writer = new PrintWriter(socket.getOutputStream());
-                String answer = "";
                 String line = null;
 
                 //handle request
