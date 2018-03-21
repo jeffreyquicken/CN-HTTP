@@ -9,31 +9,36 @@ import java.util.Date;
  * @since   2018-03-07
  */
 public class Server extends Thread {
-    public static String AVAILABLE_FILE = "./webpage.html";
+    private static String AVAILABLE_FILE = "./webpage.html";
 
     public void run(){
         try {
+            // creates serversocket
             ServerSocket serverSocket = new ServerSocket(8080);
             while(true){
 
                 Socket socket = serverSocket.accept();
 
+                // initializes reader and writer for input and output
                 BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
                 PrintWriter writer = new PrintWriter(socket.getOutputStream());
-                String line = null;
+                String line;
 
-                //handle request
-
+                //handle request based upon input from client
                 if((line = reader.readLine()) != null){
-                    //read request line
+                    //read request line and parse the first line
                     String [] parsed = line.split("[/]");
                     String command = parsed[0];
                     String path = parsed[1];
 
+                    // if the given path doesn't exist a 404 will be sent
                     if(!path.equals(AVAILABLE_FILE)){
                         writer.println("HTTP/1.1 404 Not Found");
                     }
-                    Date date = new Date();
+
+                    Date date;
+
+                    // selects the right response to be sent based upon the request from the client
                     switch (command) {
                         case "GET":
                             writer.println("HTTP/1.1 200 OK");
@@ -43,7 +48,7 @@ public class Server extends Thread {
                             File file = new File("./webpage.html");
                             long length = file.length();
                             writer.println("Content-length: " + length);
-                            //TODO send body to client
+                            //TODO read html file and send as body to client
                             break;
                         case "HEAD":
                             writer.println("HTTP/1.1 200 OK");
@@ -66,11 +71,12 @@ public class Server extends Thread {
                             date = new Date();
                             writer.println(date);
                             break;
-                        default:
+                        default: // sends a 400 error when command given by client isn't recognised
                             writer.println("HTTP/1.1 400 Bad Request");
                             break;
                     }
                 }
+                // close the reader, writer and socket
                 reader.close();
                 writer.close();
                 socket.close();

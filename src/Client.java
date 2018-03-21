@@ -18,7 +18,7 @@ import java.net.URL;
 public class Client {
 
     // Path where response is stored
-    public static String RESPONSE_PATH = "./response.html";
+    private static String RESPONSE_PATH = "./response.html";
 
     // Opens a client socket and connects to the given server at the given port, outputs the response and saves it to disk
     public static void request(String command, String url, String path,  int port, String message, Boolean save) throws Exception{
